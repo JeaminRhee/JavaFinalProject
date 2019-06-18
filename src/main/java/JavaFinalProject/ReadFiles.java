@@ -12,13 +12,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-
+import java.nio.file.*;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 
 /**
@@ -30,6 +28,34 @@ public class ReadFiles {
 	static HashMap<String,String> correction = new HashMap<String,String>();
 	
 	
+	public static String readFileAsString(String fileName) throws Exception 
+	  { 
+		boolean check = true;
+	    String data = ""; 
+		File file = new File(fileName);
+		   
+		BufferedReader br  =  new BufferedReader(new InputStreamReader(new FileInputStream(file),"euc-kr"));
+
+		String line = null;
+
+		while((line=br.readLine()) != null){
+			if(check == true) {
+				data = data + line;
+				check = false;
+			}else {
+				data = data + "\r\n" + line;
+			}
+			
+		}
+	    //data = new String(Files.readAllBytes(Paths.get(fileName))); 
+	    
+	    return data; 
+	  } 
+	
+	
+	
+	
+	
 	/**
 	 * User inputs a path where a docx file exists with arguments and passes it to readDocx as a parameter.
 	 * And readDocx method reads the docx file.
@@ -37,6 +63,7 @@ public class ReadFiles {
 	 * @param String input(args[0])
 	 * @return a docx formatted file
 	 */
+	/*
 	public XWPFDocument readDocx(String input) {
 			XWPFDocument document = null;
 			FileInputStream fileInputStream = null;
@@ -75,8 +102,11 @@ public class ReadFiles {
 			}
 			return document.getXWPFDocument();
 		}
-	
+	*/
 
+	
+	
+	
 	/**
 	 * readTypoCollection reads two CSV formatted files; EngTypoCollection, KorTypoCollection.
 	 * These files are filled with a bunch of sets of 'Typo and Correction'.
@@ -86,7 +116,6 @@ public class ReadFiles {
 		String engTypoFile = "EngTypoCollection.csv", korTypoFile = "KorTypoCollection.csv";
 		String line ="";
 		boolean removeHead1=true, removeHead2=true;
-		
 		HashMap<String,String> typoCollection = new HashMap<String,String>();
 		//ArrayList<String> stringCol = new ArrayList<String>();
 		
@@ -138,6 +167,7 @@ public class ReadFiles {
 		try
 		{
 			csvReader2 = new BufferedReader(new InputStreamReader(new FileInputStream(korTypoFile), "euc-kr"));
+			//csvReader2 = new BufferedReader(new InputStreamReader(new FileInputStream(korTypoFile), "UTF-8"));
 			
 			while ((line = csvReader2.readLine()) != null)
 			{
@@ -158,12 +188,52 @@ public class ReadFiles {
 			return typoCollection;
 	}
 
+	
+	public static void textWrite(String address, String fixedText) {
+
+		//Creating a correction text file so users can be aware of what mistakes they made.
+		try {
+			PrintWriter writer = new PrintWriter("CorrectionResult.txt", "UTF-8");
+			writer.println("   CORRECTION  (TYPO)");
+			
+			int i = 1 ;
+			for(String key: correction.keySet()) {
+				if(correction.get(key).length()>7) {
+					writer.println(i+"."+correction.get(key)+"  ("+key+")");
+				}else {
+					writer.println(i+"."+correction.get(key)+"       ("+key+")");
+				}
+				i++;
+			}
+			writer.close();
+			
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		try {
+			PrintWriter author = new PrintWriter(address, "UTF-8");
+			author.println(fixedText);
+			
+			author.close();
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("modified text file created"); //final line message
+		
+	}
+	
+	
+	
+	
 	/**
 	 * The path where a corrected docx file will be stored is output parameter;args[1].
 	 * It writes a corrected docx file in the path that a user set at initial.
 	 * @param String output(args[1])
 	 * @param String modifiedText
 	 */
+	/*
 	public static void write(String output, String modifiedText) {
 		//creating a modified document (hopefully doesn't contain any typo)
 		try
@@ -203,5 +273,6 @@ public class ReadFiles {
 		
 		System.out.println("modified docx created"); //final line message
 	}
+	*/
 }
 

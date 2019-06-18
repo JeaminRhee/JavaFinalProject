@@ -1,9 +1,12 @@
 package JavaFinalProject;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+
+import java.io.*; 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.*; 
+import java.nio.charset.StandardCharsets; 
+import java.nio.file.*; 
+
 
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -32,7 +35,7 @@ args[1](String output):  "C:\git\output.docx" <-This will be the path and docx f
  */
 public class MainRead extends Thread{
 	public String[] args;
-
+	public String data, fixedText;
 	public MainRead(String args[]) {
 		this.args = args;
 	}
@@ -52,18 +55,37 @@ public class MainRead extends Thread{
 			System.exit(0);
 		}
 
-		//Read a docx file that may need correction.
-		XWPFDocument document = reader.readDocx(args[0]);			
+		/*
+		Read a docx file that may need correction.
+		XWPFDocument document = reader.readDocx(args[0]);	
+		*/		
 		
+		//Read a plain text file that may need correction.
+		try {
+			data = ReadFiles.readFileAsString(args[0]);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+
 		HashMap<String,String> typoCollection = reader.readTypoCollection();
+		
+		fixedText = TypoDetector.fix(data, typoCollection);
+		
+		ReadFiles.textWrite(args[1], fixedText);
 		
 		//Pass an OG docx file and typoCollection and get modified text.
 		//All the detecting and modifying processes are dealt in TypoDetector.
-		String modifiedText = TypoDetector.run(document, typoCollection);
+		/*
+		 String modifiedText = TypoDetector.run(document, typoCollection);
+		 */
+
+		
 		
 		//Write a corrected docx file.
+		/*
 		ReadFiles.write(args[1], modifiedText);
-		//reader.write(args[1], modifiedText);
+		 */
 		
 	}		
 	
