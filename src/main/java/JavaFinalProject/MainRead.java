@@ -32,12 +32,6 @@ args[1](String output):  "C:\git\output.docx" <-This will be the path and docx f
  */
 public class MainRead extends Thread{
 	public String[] args;
-	
-	/*
-	public static void main(String args[]) {
-
-	}
-	*/
 
 	public MainRead(String args[]) {
 		this.args = args;
