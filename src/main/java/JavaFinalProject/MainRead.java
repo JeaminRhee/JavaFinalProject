@@ -16,7 +16,7 @@ args[1](String output):  "C:\git\output.docx" <-This will be the path and docx f
 */
 
 /**
- * The Main method.
+ * The method.
  * This program implements an application that simply detects typos in a docx file and 
  * correct them and return a corrected docx file that may not contain typos.
  * 

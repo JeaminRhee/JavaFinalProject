@@ -31,7 +31,7 @@ public class ReadFiles {
 	
 	
 	/**
-	 * User inputs a path where a docx file exists with arguments and passes it to readDocx as a pararmeter.
+	 * User inputs a path where a docx file exists with arguments and passes it to readDocx as a parameter.
 	 * And readDocx method reads the docx file.
 	 * 
 	 * @param String input(args[0])
